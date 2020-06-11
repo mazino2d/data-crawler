@@ -7,7 +7,7 @@ import time
 
 # Add the arguments to the parser
 ap = argparse.ArgumentParser()
-ap.add_argument("-l", "--key", type=str, nargs=2, required=True)
+ap.add_argument("-k", "--key", type=str, nargs=2, required=True)
 ap.add_argument("-s", "--scroll", type=int, nargs=2, default=[30, 1])
 ap.add_argument("-t", "--time", type=int, nargs=2, default=[120, 600])
 
@@ -18,19 +18,18 @@ SCROLL, TIME = args['scroll']
 MIN, MAX = args['time']
 
 # Setup Chrome Webdriver
-CHROME_VERSION = "80"
-CHROME_ADDRESS = '../../../chromedriver/%s'
+CHROME_ADDRESS = '/usr/local/bin/chromedriver'
 options = webdriver.ChromeOptions()
 options.add_argument('disable_infobars')
 driver = webdriver.Chrome(
-    CHROME_ADDRESS % (CHROME_VERSION),
+    CHROME_ADDRESS,
     options=options)
 waiter = WebDriverWait(driver, 10)
 
 # Access web by webdriver (YOUTUBE trending)
 ORIGIN_LINK = 'https://www.youtube.com/'
 if TYPE == 'search':
-    ORIGIN_LINK += 'results?search_query=%s' 
+    ORIGIN_LINK += 'results?search_query=%s'
 elif TYPE == 'channel':
     ORIGIN_LINK += 'channel/%s/videos'
 driver.get(ORIGIN_LINK % (KEY))
@@ -83,7 +82,7 @@ with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         except:
             print("[WARNING] Sign in to confirm your age.")
             continue
-        
+
         duration = info['duration']
         if duration < MAX and duration > MIN:
             ydl.download([link])

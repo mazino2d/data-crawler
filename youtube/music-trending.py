@@ -3,13 +3,13 @@ import pandas as pd
 from selenium import webdriver
 from pyvirtualdisplay import Display
 import schedule
-import time, os
+import time
+import os
+
 
 def start_chrome():
-    # # Chrome Version
-    CHROME_VERSION = "81"
     # # Chrom Dirver
-    CHROME_ADDRESS = '../../chromedriver/%s' % (CHROME_VERSION)
+    CHROME_ADDRESS = '/usr/local/bin/chromedriver'
     # # Chrome Options
     CHROME_OPTIONS = webdriver.ChromeOptions()
     CHROME_OPTIONS.add_argument("start-maximized")
@@ -23,11 +23,13 @@ def start_chrome():
 
     try:
         driver = webdriver.Chrome(CHROME_ADDRESS, options=CHROME_OPTIONS)
-        display = Display(visible=0, size=(800, 800)); display.start()
+        display = Display(visible=0, size=(800, 800))
+        display.start()
     except:
         print("[BUG][CHROME] Can not start Chrome! Check your Xvbf and Chrome version.")
-    
+
     return display, driver
+
 
 def crawl_youtube(driver):
     # Access web by webdriver (YOUTUBE trending)
@@ -71,6 +73,7 @@ def crawl_youtube(driver):
     df = df.drop_duplicates(ignore_index=True)
     df.to_csv('data/video/video-%s.csv' % (timestamp))
 
+
 def job():
     try:
         display, driver = start_chrome()
@@ -79,6 +82,7 @@ def job():
     finally:
         driver.close()
         display.stop()
+
 
 if __name__ == "__main__":
     job()
